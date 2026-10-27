@@ -10,142 +10,178 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232a78d6'/%3E%3Cpath d='M9 23v-5M14 23V12M19 23V9M24 23v-7' stroke='%23fff' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400..600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
 <script>try { const t = localStorage.getItem('kw-theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (e) {}</script>
 <style>
 :root {
   color-scheme: light;
-  --page: #f4f3ee; --surface: #ffffff; --sunk: #ecebe5; --ink: #121316; --ink-2: #47484d; --muted: #6b6c72;
-  --grid: #eceae4; --axis: #cfcdc4; --line: rgba(18, 19, 22, .1); --accent: #1d5bb0; --bar: rgba(244, 243, 238, .84);
-  --shadow: 0 1px 2px rgba(18, 19, 22, .04), 0 10px 28px -16px rgba(18, 19, 22, .14);
-  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --neg: #2a78d6; --mid: #f0efec; --pos: #e34948;
+  --page: #ffffff; --surface: #ffffff; --raised: #ffffff; --ink: #17171a; --ink-2: #4a4a52; --muted: #6c6c75;
+  --fill: rgba(118, 118, 128, .12); --fill-2: rgba(118, 118, 128, .2); --rule: rgba(23, 23, 26, .12);
+  --grid: #ececf0; --axis: #c8c8cf; --accent: #1460c8; --bar: rgba(255, 255, 255, .72);
+  --lift: 0 3px 8px rgba(0, 0, 0, .12), 0 3px 1px rgba(0, 0, 0, .04);
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --neg: #2a78d6; --mid: #ededf0; --pos: #e34948;
+  --ease: cubic-bezier(.23, 1, .32, 1);
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
-    --page: #0c0d10; --surface: #15161a; --sunk: #1e1f24; --ink: #ecebe6; --ink-2: #b9b8b2; --muted: #8b8a85;
-    --grid: #25262c; --axis: #3a3b42; --line: rgba(255, 255, 255, .08); --accent: #8ab8f2; --bar: rgba(12, 13, 16, .8);
-    --shadow: none;
-    --s1: #3987e5; --s2: #d95926; --s3: #199e70; --neg: #3987e5; --mid: #383835; --pos: #e66767;
+    --page: #000000; --surface: #000000; --raised: #636366; --ink: #f5f5f7; --ink-2: #c2c2c8; --muted: #8e8e95;
+    --fill: rgba(118, 118, 128, .24); --fill-2: rgba(118, 118, 128, .34); --rule: rgba(255, 255, 255, .14);
+    --grid: #1d1d20; --axis: #3a3a3f; --accent: #5aa2ff; --bar: rgba(0, 0, 0, .68);
+    --lift: 0 3px 8px rgba(0, 0, 0, .32);
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70; --neg: #3987e5; --mid: #2c2c2e; --pos: #e66767;
   }
 }
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --page: #0c0d10; --surface: #15161a; --sunk: #1e1f24; --ink: #ecebe6; --ink-2: #b9b8b2; --muted: #8b8a85;
-  --grid: #25262c; --axis: #3a3b42; --line: rgba(255, 255, 255, .08); --accent: #8ab8f2; --bar: rgba(12, 13, 16, .8);
-  --shadow: none;
-  --s1: #3987e5; --s2: #d95926; --s3: #199e70; --neg: #3987e5; --mid: #383835; --pos: #e66767;
+  --page: #000000; --surface: #000000; --raised: #636366; --ink: #f5f5f7; --ink-2: #c2c2c8; --muted: #8e8e95;
+  --fill: rgba(118, 118, 128, .24); --fill-2: rgba(118, 118, 128, .34); --rule: rgba(255, 255, 255, .14);
+  --grid: #1d1d20; --axis: #3a3a3f; --accent: #5aa2ff; --bar: rgba(0, 0, 0, .68);
+  --lift: 0 3px 8px rgba(0, 0, 0, .32);
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70; --neg: #3987e5; --mid: #2c2c2e; --pos: #e66767;
 }
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
-html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
-body { margin: 0; background: var(--page); color: var(--ink); -webkit-font-smoothing: antialiased;
-  font: 15px/1.55 "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif; }
-::selection { background: color-mix(in srgb, var(--s1) 28%, transparent); }
+body { margin: 0; background: var(--page); color: var(--ink); caret-color: var(--accent);
+  font: 16px/1.5 "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif; }
+::selection { background: color-mix(in srgb, var(--accent) 26%, transparent); }
 a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.wrap { width: 100%; max-width: 1240px; margin: 0 auto; padding-left: 16px; padding-right: 16px; }
-@media (min-width: 720px) { .wrap { padding-left: 28px; padding-right: 28px; } }
-h1, h2 { font-family: Newsreader, Georgia, "Times New Roman", serif; font-weight: 500; letter-spacing: -.015em; text-wrap: balance; }
+h1, h2, h3 { text-wrap: balance; }
 p { text-wrap: pretty; }
-.eyebrow { margin: 0 0 12px; font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.wrap { width: 100%; max-width: 1200px; margin: 0 auto; padding-left: 16px; padding-right: 16px; }
+@media (min-width: 720px) { .wrap { padding-left: 32px; padding-right: 32px; } }
+.vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
-.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 64px; }
-.mark { display: inline-flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; font-size: 15px; font-weight: 600; }
-.mark svg { flex: none; width: 24px; height: 24px; }
-.mark rect { fill: var(--s1); }
-.mark path { fill: none; stroke: #fff; stroke-width: 3; stroke-linecap: round; }
-.links { display: flex; align-items: center; gap: 4px; }
-.links a { display: inline-flex; align-items: center; gap: 4px; padding: 8px 10px; border-radius: 8px; color: var(--ink-2);
-  text-decoration: none; font-size: 14px; font-weight: 500; }
-.links a:hover { color: var(--ink); background: var(--sunk); }
-.ext { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+button { position: relative; height: 32px; padding: 0 12px; border: 0; border-radius: 8px; background: var(--fill); color: var(--ink);
+  font: inherit; font-size: 13px; font-weight: 500; line-height: 1; cursor: pointer; }
+button::before { content: ""; position: absolute; inset: -4px 0; }  /* a 40px hit area round a 32px button */
+button, .seg span, .sel select, .jump a { transition: background-color .15s var(--ease), color .15s var(--ease), transform .12s var(--ease); }
+button:active, .seg label:active span { transform: scale(.97); }
+button[aria-pressed="true"] { background: var(--ink); color: var(--page); }
+.icon { display: inline-grid; place-items: center; width: 40px; height: 40px; padding: 0; border-radius: 50%; background: transparent; color: var(--ink-2); }
+.icon::before { content: none; }
+.icon svg { width: 20px; height: 20px; }
+.icon circle { fill: none; stroke: currentColor; stroke-width: 1.6; }
+.icon path { fill: currentColor; }
+.ext { flex: none; width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 
-.hero { position: relative; isolation: isolate; padding: 28px 0 40px; }
-.hero::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
-  background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
-  background-size: 32px 32px; background-position: -1px -1px;
-  -webkit-mask-image: radial-gradient(120% 90% at 85% 0%, #000, transparent 65%); mask-image: radial-gradient(120% 90% at 85% 0%, #000, transparent 65%); }
-h1 { max-width: 13em; margin: 0 0 18px; font-size: clamp(36px, 6.4vw, 64px); line-height: 1.02; }
-.dek { max-width: 64ch; margin: 0 0 18px; font-size: clamp(16px, 1.6vw, 18.5px); line-height: 1.6; color: var(--ink-2); }
-.byline { margin: 0 0 24px; font-size: 13.5px; color: var(--muted); }
+.top { display: flex; align-items: center; justify-content: space-between; min-height: 60px; }
+.mark { margin: 0; font-size: 15px; font-weight: 600; }
+.intro { padding-top: 36px; padding-bottom: 44px; }
+@media (min-width: 1000px) {
+  .intro { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); column-gap: 64px; align-items: end;
+    padding-top: 52px; padding-bottom: 60px; }
+}
+h1 { max-width: 14em; margin: 0 0 20px; font-size: clamp(36px, 5.2vw, 60px); font-weight: 600; line-height: 1.04; letter-spacing: -.028em; }
+@media (min-width: 1000px) { h1 { margin: 0; } }
+.dek { max-width: 62ch; margin: 0 0 16px; font-size: 17px; line-height: 1.55; color: var(--ink-2); }
+.byline { margin: 0 0 8px; font-size: 14px; color: var(--muted); }
 .byline b { color: var(--ink); font-weight: 600; }
-.cta { display: flex; flex-wrap: wrap; gap: 10px; }
-.btn { display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border-radius: 11px; border: 1px solid var(--line);
-  background: var(--surface); color: var(--ink); box-shadow: var(--shadow); font-size: 15px; font-weight: 500; text-decoration: none; }
-.btn:hover { border-color: var(--axis); }
-.btn.primary { background: var(--ink); border-color: var(--ink); color: var(--page); }
-.btn.primary:hover { opacity: .88; }
+.go { display: flex; flex-wrap: wrap; gap: 0 24px; margin: 0; }
+.go a { display: inline-flex; align-items: center; gap: 5px; min-height: 40px; font-size: 16px; font-weight: 500; text-decoration: none; }
 
-.bar { position: sticky; top: 0; z-index: 20; background: var(--bar); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
-  -webkit-backdrop-filter: saturate(1.5) blur(14px); backdrop-filter: saturate(1.5) blur(14px); }
-.bar-in { display: flex; align-items: center; gap: 8px; padding-top: 8px; padding-bottom: 8px; }
-.seg { display: flex; flex: none; height: 44px; padding: 3px; gap: 2px; border-radius: 11px; background: var(--sunk); border: 1px solid var(--line); }
-.seg label { position: relative; display: flex; }
+#pin { height: 1px; margin-bottom: -1px; }
+/* clear until content scrolls under it; then a material whose last 16px fade out, a scroll edge in place of a 1px rule */
+.bar { position: sticky; top: 0; z-index: 20; margin-bottom: -16px; padding-bottom: 16px; pointer-events: none;  /* the fade passes clicks through */
+  -webkit-mask-image: linear-gradient(#000 calc(100% - 16px), transparent); mask-image: linear-gradient(#000 calc(100% - 16px), transparent);
+  transition: background-color .2s var(--ease), -webkit-backdrop-filter .2s var(--ease), backdrop-filter .2s var(--ease); }
+.bar.stuck { background: var(--bar); -webkit-backdrop-filter: blur(20px) saturate(180%); backdrop-filter: blur(20px) saturate(180%); }
+.bar-in { display: flex; align-items: center; gap: 8px; padding-top: 8px; padding-bottom: 8px; pointer-events: auto; }
+.seg { position: relative; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; flex: none; height: 40px; padding: 3px;
+  border-radius: 10px; background: var(--fill); }
+.seg label { position: relative; z-index: 1; display: flex; cursor: pointer; }
 .seg input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
-.seg span { display: flex; align-items: center; padding: 0 12px; border-radius: 8px; font-size: 14px; font-weight: 500; color: var(--ink-2); }
-.seg input:checked + span { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(0, 0, 0, .1), 0 0 0 1px var(--line); }
-.seg input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 1px; }
-.sel { position: relative; display: block; min-width: 0; }
-.sel-s { flex: 0 0 96px; }
-.sel-p { flex: 0 1 150px; }
-.sel span { position: absolute; left: 11px; top: 6px; font-size: 10.5px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase;
-  color: var(--muted); pointer-events: none; }
-.sel::after { content: ""; position: absolute; right: 12px; top: 50%; width: 6px; height: 6px; margin-top: -5px; pointer-events: none;
-  border: solid var(--muted); border-width: 0 1.5px 1.5px 0; transform: rotate(45deg); }
-.sel select { -webkit-appearance: none; appearance: none; display: block; width: 100%; height: 44px; margin: 0; padding: 17px 26px 3px 10px;
-  font: inherit; font-size: 15px; font-weight: 500; color: var(--ink); background: var(--surface); border: 1px solid var(--line);
-  border-radius: 11px; cursor: pointer; text-overflow: ellipsis; }
-.sel select:hover { border-color: var(--axis); }
-@media (max-width: 719px) { .sel select { font-size: 16px; } }
+.seg span { display: flex; align-items: center; justify-content: center; width: 100%; padding: 0 12px; border-radius: 7px;
+  font-size: 14px; font-weight: 500; color: var(--ink-2); }
+.seg input:checked + span { color: var(--ink); }
+.seg input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 0; }
+.thumb { position: absolute; top: 3px; bottom: 3px; left: 3px; width: calc(50% - 3px); border-radius: 7px; background: var(--raised);
+  box-shadow: var(--lift); transition: transform .26s var(--ease); }
+.seg:has(label:nth-of-type(2) input:checked) .thumb { transform: translateX(100%); }
+@supports not selector(:has(*)) {
+  .thumb { display: none; }
+  .seg input:checked + span { background: var(--raised); box-shadow: var(--lift); }
+}
+.seg.sm { height: 32px; border-radius: 8px; }
+.seg.sm span { padding: 0 10px; border-radius: 5px; font-size: 13px; }
+.seg.sm .thumb { border-radius: 5px; }
+.seg.sm label::before { content: ""; position: absolute; inset: -4px 0; }
+.sel { position: relative; display: block; flex: none; }  /* never squeezed past its longest option; a phone scrolls the row */
+.sel::before, .sel::after { content: ""; position: absolute; top: 50%; pointer-events: none; background: var(--muted);
+  -webkit-mask: center / contain no-repeat; mask: center / contain no-repeat; }
+.sel::before { left: 10px; width: 16px; height: 16px; margin-top: -8px; }
+.sel::after { right: 9px; width: 10px; height: 14px; margin-top: -7px;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 14' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 5.2 5 2.2l3 3M2 8.8l3 3 3-3'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 14' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 5.2 5 2.2l3 3M2 8.8l3 3 3-3'/%3E%3C/svg%3E"); }
+.sel-s::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.6' stroke-linejoin='round'%3E%3Cpath d='M8 14.4s4.6-4.1 4.6-7.7a4.6 4.6 0 0 0-9.2 0c0 3.6 4.6 7.7 4.6 7.7z'/%3E%3Ccircle cx='8' cy='6.7' r='1.7'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.6' stroke-linejoin='round'%3E%3Cpath d='M8 14.4s4.6-4.1 4.6-7.7a4.6 4.6 0 0 0-9.2 0c0 3.6 4.6 7.7 4.6 7.7z'/%3E%3Ccircle cx='8' cy='6.7' r='1.7'/%3E%3C/svg%3E"); }
+.sel-p::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round'%3E%3Crect x='2.3' y='3.3' width='11.4' height='10.4' rx='2.2'/%3E%3Cpath d='M2.3 6.8h11.4M5.4 1.8v2.6M10.6 1.8v2.6'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round'%3E%3Crect x='2.3' y='3.3' width='11.4' height='10.4' rx='2.2'/%3E%3Cpath d='M2.3 6.8h11.4M5.4 1.8v2.6M10.6 1.8v2.6'/%3E%3C/svg%3E"); }
+.sel select { -webkit-appearance: none; appearance: none; display: block; width: 100%; height: 40px; margin: 0; padding: 0 26px 0 32px;
+  font: inherit; font-size: 15px; font-weight: 500; color: var(--ink); background: var(--fill); border: 0; border-radius: 10px;
+  cursor: pointer; text-overflow: ellipsis; }
+@media (max-width: 719px) {
+  .sel select { padding: 0 23px 0 30px; font-size: 16px; }  /* under 16px, iOS zooms the page on focus */
+  .sel::before { left: 9px; }
+  .sel::after { right: 8px; }
+  .bar .seg span { padding: 0 8px; }
+  /* tight enough for a 390px phone; a narrower one scrolls the row, faded at the gutters, rather than clip a code */
+  .bar-in { gap: 6px; overflow-x: auto; scrollbar-width: none;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 16px calc(100% - 16px), transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 16px calc(100% - 16px), transparent); }
+  .bar-in::-webkit-scrollbar { display: none; }
+}
 .jump { display: none; margin-left: auto; gap: 2px; }
-.jump a { padding: 8px 12px; border-radius: 8px; color: var(--ink-2); text-decoration: none; font-size: 14px; font-weight: 500; }
-.jump a:hover { color: var(--ink); background: var(--sunk); }
+.jump a { display: flex; align-items: center; min-height: 40px; padding: 0 12px; border-radius: 8px; color: var(--ink-2);
+  font-size: 14px; font-weight: 500; text-decoration: none; }
+.jump a[aria-current] { color: var(--ink); background: var(--fill); }
 @media (min-width: 860px) { .jump { display: flex; } }
 
-.glance { padding-top: 22px; }
-.scope { margin: 0 0 12px; font-size: 14px; color: var(--ink-2); }
+.glance { padding-top: 24px; }
+.scope { margin: 0 0 14px; font-size: 14px; color: var(--ink-2); }
 .scope b { margin-right: 8px; color: var(--ink); font-weight: 600; }
-.kpis { display: grid; gap: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-@media (min-width: 900px) { .kpis { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; } }
-.kpi { padding: 14px 16px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); }
-.kpi-l { margin: 0 0 8px; font-size: 12.5px; font-weight: 500; line-height: 1.35; color: var(--muted); }
-.kpi-v { display: flex; align-items: baseline; gap: 10px; margin: 0 0 6px; letter-spacing: -.01em;
-  font: 500 clamp(30px, 3.6vw, 42px)/1 Newsreader, Georgia, serif; font-variant-numeric: lining-nums tabular-nums; }
-.kpi-v small { margin-left: -5px; font: 500 14px/1 "IBM Plex Sans", system-ui, sans-serif; color: var(--muted); }
-.kpi-n { margin: 0; font-size: 13px; line-height: 1.45; color: var(--ink-2); }
-.dot { display: inline-block; flex: none; align-self: center; width: 12px; height: 12px; border-radius: 4px; }
+.ledger { display: grid; grid-template-columns: minmax(0, 1fr); column-gap: 48px; margin: 0; border-top: 1px solid var(--rule); }
+@media (min-width: 900px) { .ledger { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.lr { display: grid; grid-template-columns: 6.5rem minmax(0, 1fr); column-gap: 16px; align-items: baseline; padding: 16px 0 18px;
+  border-bottom: 1px solid var(--rule); }
+.lr dt { grid-area: 1 / 2; font-size: 14px; font-weight: 600; line-height: 1.4; }
+.lr dd { margin: 0; }
+.lr .v { grid-area: 1 / 1 / 3; display: flex; align-items: baseline; gap: 6px; font-size: 32px; font-weight: 500; line-height: 1;
+  letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.lr .v small { font-size: 15px; letter-spacing: 0; color: var(--muted); }
+.lr .n { grid-area: 2 / 2; font-size: 14px; line-height: 1.45; color: var(--ink-2); }
+.tick { display: inline-block; flex: none; width: 4px; height: 16px; border-radius: 2px; background: var(--c); }
+.lr .tick { align-self: center; height: 24px; }
 
-.sec { padding-top: 64px; scroll-margin-top: 4px; }
-.sec-head { max-width: 780px; margin-bottom: 22px; }
-h2 { margin: 0 0 12px; font-size: clamp(28px, 3.6vw, 40px); line-height: 1.08; }
-.lede { margin: 0 0 10px; font-size: 16px; line-height: 1.6; color: var(--ink-2); }
-.note { margin: 0; font-size: 13px; color: var(--muted); }
-.empty { margin: 0; padding: 32px 20px; text-align: center; color: var(--ink-2); background: var(--surface); border: 1px dashed var(--axis); border-radius: 14px; }
+.sec { padding-top: 72px; }
+@media (min-width: 720px) { .sec { padding-top: 96px; } }
+.sec-head { margin-bottom: 28px; }
+h2 { margin: 0 0 12px; font-size: clamp(28px, 3.4vw, 40px); font-weight: 600; line-height: 1.1; letter-spacing: -.022em; }
+.lede { max-width: 68ch; margin: 0 0 10px; font-size: 17px; line-height: 1.55; color: var(--ink-2); }
+.note { margin: 0; font-size: 14px; color: var(--muted); }
+.empty { padding: 56px 16px; text-align: center; border-top: 1px solid var(--rule); }
+.empty p { margin: 0; color: var(--ink-2); }
+.empty b { display: block; margin-bottom: 4px; font-size: 17px; font-weight: 600; color: var(--ink); }
 
-.charts { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); }
+.charts { display: grid; gap: 48px 40px; grid-template-columns: minmax(0, 1fr); }
 @media (min-width: 980px) {
   .charts { grid-template-columns: repeat(12, minmax(0, 1fr)); }
   .c-surf, .c-cal { grid-column: span 7; }
   .c-smile, .c-term { grid-column: span 5; }
 }
-.card { min-width: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); }
-figure.card { margin: 0; padding: 16px 16px 10px; }
-figcaption { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 8px 12px; margin-bottom: 8px; }
-.ttl { flex: 1 1 220px; min-width: 0; }
-.ttl h3 { margin: 0; font-size: 15px; font-weight: 600; line-height: 1.35; }
-.cap { margin: 3px 0 0; font-size: 13px; line-height: 1.45; color: var(--muted); }
-.tools { display: flex; flex-wrap: wrap; gap: 6px; }
-button { font: inherit; font-size: 13px; font-weight: 500; line-height: 1.2; color: var(--ink-2); background: var(--surface);
-  border: 1px solid var(--line); border-radius: 8px; padding: 6px 11px; cursor: pointer; }
-button:hover { color: var(--ink); border-color: var(--axis); }
-button[aria-pressed="true"] { color: var(--ink); background: var(--sunk); }
-.icon { display: inline-grid; place-items: center; width: 38px; height: 38px; padding: 0; border-radius: 10px; }
-.icon svg { width: 18px; height: 18px; }
-.icon circle { fill: none; stroke: currentColor; stroke-width: 1.7; }
-.icon path { fill: currentColor; }
+.fig { min-width: 0; margin: 0; padding-top: 14px; border-top: 1px solid var(--rule); }
+figcaption { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 10px 16px; margin-bottom: 12px; }
+.ttl { flex: 1 1 240px; min-width: 0; }
+.ttl h3 { margin: 0; font-size: 16px; font-weight: 600; line-height: 1.35; }
+.cap { margin: 4px 0 0; font-size: 14px; line-height: 1.45; color: var(--muted); }
+.tools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 .plot { height: 340px; }
+.plot:empty { border-radius: 12px; background: var(--fill); }  /* the frame before plotly draws */
 .c-surf .plot { height: min(340px, 75vw); }  /* a phone's box fits its width with no zoom-out */
 #reg { height: 190px; }
 @media (min-width: 980px) {
@@ -153,137 +189,161 @@ button[aria-pressed="true"] { color: var(--ink); background: var(--sunk); }
   .c-term .plot, .c-cal .plot { height: 390px; }
 }
 .view { display: none; max-height: 440px; overflow: auto; }
-figure.table .plot { display: none; }
-figure.table .view { display: block; }
-table { width: 100%; border-collapse: collapse; font-size: 12.5px; font-variant-numeric: tabular-nums; }
-th, td { padding: 6px 10px; text-align: right; white-space: nowrap; border-bottom: 1px solid var(--grid); }
-th { position: sticky; top: 0; z-index: 1; background: var(--surface); color: var(--ink-2); font-weight: 600; }
-th:first-child, td:first-child { position: sticky; left: 0; text-align: left; background: var(--surface); }
+.view, .scroll { scrollbar-width: thin; scrollbar-color: var(--axis) transparent; }
+.fig.table .plot { display: none; }
+.fig.table .view { display: block; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+th, td { padding: 7px 10px; text-align: right; white-space: nowrap; border-bottom: 1px solid var(--rule); }
+th { position: sticky; top: 0; z-index: 1; background: var(--page); color: var(--ink-2); font-weight: 600; }
+th:first-child, td:first-child { position: sticky; left: 0; text-align: left; background: var(--page); }
 th:first-child { z-index: 2; }
-.chip { display: inline-block; width: 10px; height: 10px; margin-right: 6px; border-radius: 3px; vertical-align: -1px; }
+td .tick { height: 13px; margin-right: 8px; vertical-align: -2px; }
 
-.regcards { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr)); margin-bottom: 16px; }
-.reg { padding: 16px 16px 18px; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); }
-.reg.now { border-color: color-mix(in srgb, var(--c) 60%, var(--line)); }
-.reg header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-.ltr { display: grid; place-items: center; flex: none; width: 36px; height: 36px; border-radius: 50%; border: 2.5px solid var(--c);
-  font: 600 17px/1 Newsreader, Georgia, serif; }
-.reg h3 { margin: 0; font-size: 15px; font-weight: 600; }
-.reg header p { margin: 1px 0 0; font-size: 13px; color: var(--muted); }
-.pill { display: inline-flex; align-items: center; gap: 6px; margin-left: auto; padding: 4px 10px; border-radius: 999px; background: var(--sunk);
-  font-size: 12px; font-weight: 600; }
-.pill::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--c); }
-.reg dl { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px 12px; margin: 0; }
-.reg dt { font-size: 12px; line-height: 1.3; color: var(--muted); }
-.reg dd { margin: 4px 0 0; font-size: 17px; font-weight: 500; font-variant-numeric: tabular-nums; }
-.reg dd small { display: block; margin-top: 2px; font-size: 12px; font-weight: 400; line-height: 1.3; color: var(--muted); }
-details.more { margin-top: 16px; }
-details.more summary { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; cursor: pointer;
-  font-size: 14px; font-weight: 600; list-style: none; }
-details.more summary::-webkit-details-marker { display: none; }
-details.more summary::after { content: "+"; font-size: 18px; font-weight: 400; line-height: 1; color: var(--muted); }
-details.more[open] summary::after { content: "−"; }
-.scroll { overflow-x: auto; padding: 0 6px 8px; }
+.cmp { margin-bottom: 48px; }
+.cr { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 16px; padding: 12px 0 14px; border-top: 1px solid var(--rule); }
+.cr.ch { padding-top: 0; border-top: 0; }
+.cr > span { grid-column: 1 / -1; }  /* an empty full-width row: the header keeps its four cells for screen readers */
+.ch h3 { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 16px; font-weight: 600; }
+.ch p { margin: 2px 0 0; font-size: 13px; color: var(--muted); }
+.ch .now { color: var(--ink); font-weight: 600; }
+.rl { grid-column: 1 / -1; margin: 0 0 4px; font-size: 13px; color: var(--muted); }
+.rv { margin: 0; font-size: 17px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.rv small { display: block; margin-top: 2px; font-size: 13px; font-weight: 400; line-height: 1.35; color: var(--muted); }
+@media (min-width: 720px) {
+  .cr { grid-template-columns: minmax(140px, 1fr) repeat(3, minmax(0, 1.3fr)); align-items: baseline; }
+  .cr > span { grid-column: auto; }
+  .rl { grid-column: auto; margin: 0; font-size: 14px; color: var(--ink-2); }
+}
+.more { margin-top: 32px; padding-top: 4px; border-top: 1px solid var(--rule); }
+.more summary { display: flex; align-items: center; gap: 8px; min-height: 44px; cursor: pointer; font-size: 15px; font-weight: 600; list-style: none; }
+.more summary::-webkit-details-marker { display: none; }
+.more summary::before { content: ""; width: 12px; height: 12px; background: var(--muted); transition: transform .2s var(--ease);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4.5 2.5 8 6l-3.5 3.5'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4.5 2.5 8 6l-3.5 3.5'/%3E%3C/svg%3E") center / contain no-repeat; }
+.more[open] summary::before { transform: rotate(90deg); }
+.scroll { overflow-x: auto; padding-bottom: 8px; }
 
-.method { display: grid; gap: 20px 24px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); }
-.method > div { padding-top: 14px; border-top: 1px solid var(--axis); }
-.method h3 { margin: 0 0 6px; font-size: 15px; font-weight: 600; }
-.method p { margin: 0; font-size: 14.5px; color: var(--ink-2); }
-.eq { font-family: Newsreader, Georgia, serif; font-size: 1.08em; font-style: italic; white-space: nowrap; color: var(--ink); }
-code { padding: 1px 6px; border-radius: 6px; background: var(--sunk); color: var(--ink); font: 13px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
-.foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; margin-top: 72px; padding-top: 22px; padding-bottom: 44px;
-  border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); }
+.method { display: grid; gap: 24px 40px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); }
+.method > div { padding-top: 14px; border-top: 1px solid var(--rule); }
+.method h3 { margin: 0 0 6px; font-size: 16px; font-weight: 600; }
+.method p { margin: 0; font-size: 15px; line-height: 1.55; color: var(--ink-2); }
+.eq { font-style: italic; white-space: nowrap; color: var(--ink); }
+code { padding: 2px 6px; border-radius: 6px; background: var(--fill); color: var(--ink); font: 13.5px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; margin-top: 96px; padding-top: 20px; padding-bottom: 48px;
+  border-top: 1px solid var(--rule); font-size: 13px; color: var(--muted); }
 .foot p { margin: 0; }
 
+@media (hover: hover) and (pointer: fine) {
+  button:hover, .sel select:hover, .jump a:hover { background-color: var(--fill-2); }
+  button[aria-pressed="true"]:hover { background-color: var(--ink); }
+  .icon:hover { background-color: var(--fill); color: var(--ink); }
+  .seg label:hover input:not(:checked) + span, .jump a:hover { color: var(--ink); }
+  .go a:hover { text-decoration: underline; }
+}
 @media (pointer: coarse) {
   .fine { display: none; }
   #surf-fig:not(.live) #surf { pointer-events: none; }  /* a touch scrolls the page until Rotate is on */
-  .tools button { padding: 9px 13px; }
+  .seg, .sel select { height: 44px; }
+  button, .seg.sm { height: 40px; }
+  button { padding: 0 14px; }
 }
 @media not all and (pointer: coarse) { .coarse { display: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .thumb, .more summary::before { transition: none; }
+  button:active, .seg label:active span { transform: none; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .bar.stuck { background: var(--page); -webkit-backdrop-filter: none; backdrop-filter: none; }
+}
+@media (prefers-contrast: more) {
+  body { --rule: color-mix(in srgb, var(--ink) 45%, transparent); --muted: var(--ink-2); --fill: color-mix(in srgb, var(--ink) 14%, transparent); }
+  .bar { margin-bottom: 0; padding-bottom: 0; -webkit-mask-image: none; mask-image: none; }
+  .bar.stuck { background: var(--page); -webkit-backdrop-filter: none; backdrop-filter: none; box-shadow: 0 1px 0 var(--ink); }
+}
 </style>
 </head>
 <body>
 <header class="top wrap">
-  <a class="mark" href="#top"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8"/><path d="M9 23v-5M14 23V12M19 23V9M24 23v-7"/></svg>Kalshi weather</a>
-  <nav class="links" aria-label="Project">
-    <a href="https://github.com/Deivid-Negoita/kalshi-weather">GitHub<svg class="ext" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 11 11 5M6 5h5v5"/></svg></a>
-    <button class="icon" id="theme" type="button" aria-label="Switch theme"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z"/></svg></button>
-  </nav>
+  <p class="mark">Kalshi weather</p>
+  <button class="icon" id="theme" type="button" aria-label="Switch theme"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z"/></svg></button>
 </header>
 
-<section class="hero">
-  <div class="wrap">
-    <p class="eyebrow">Prediction markets · Implied volatility</p>
-    <h1>Kalshi's temperature markets, read as an options book</h1>
+<main>
+<section class="intro wrap">
+  <h1>Kalshi's temperature markets, read as an options book</h1>
+  <div>
     <p class="dek">Each day Kalshi lists a ladder of brackets on the high and the low at US weather stations, and each bracket pays $1
     if the official reading lands in it. Read together, the prices are the market's distribution for the day. Inverted, they give an
     implied-volatility surface that can be checked against what the thermometer read.</p>
     <p class="byline">By <b>Deivid-Bogdan Negoiță</b><span id="meta"></span></p>
-    <div class="cta">
-      <a class="btn primary" href="https://github.com/Deivid-Negoita/kalshi-weather">View the code</a>
-      <a class="btn" href="https://github.com/Deivid-Negoita/kalshi-weather#readme">Read the write-up</a>
-    </div>
+    <p class="go">
+      <a href="https://github.com/Deivid-Negoita/kalshi-weather">View the code<svg class="ext" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 11 11 5M6 5h5v5"/></svg></a>
+      <a href="https://github.com/Deivid-Negoita/kalshi-weather#readme">Read the write-up<svg class="ext" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 11 11 5M6 5h5v5"/></svg></a>
+    </p>
   </div>
 </section>
 
-<div class="bar">
+<div id="pin" aria-hidden="true"></div>
+<div class="bar" id="controls">
   <div class="wrap bar-in">
     <div class="seg" role="radiogroup" aria-label="Reading">
       <label><input type="radio" name="kind" value="high" checked><span>Highs</span></label>
       <label><input type="radio" name="kind" value="low"><span>Lows</span></label>
+      <i class="thumb" aria-hidden="true"></i>
     </div>
-    <label class="sel sel-s"><span>Station</span><select id="code"></select></label>
-    <label class="sel sel-p"><span>Period</span><select id="period"></select></label>
+    <label class="sel sel-s"><span class="vh">Station</span><select id="code"></select></label>
+    <label class="sel sel-p"><span class="vh">Period</span><select id="period"></select></label>
     <nav class="jump" aria-label="Sections"><a href="#surface">Surface</a><a href="#regimes">Regimes</a><a href="#method">Method</a></nav>
   </div>
 </div>
 
-<main>
-<section class="wrap glance" aria-label="At a glance">
+<section class="wrap glance" id="glance" aria-label="At a glance">
   <p class="scope" id="sub"></p>
-  <div class="kpis" id="kpis"></div>
+  <dl class="ledger" id="kpis"></dl>
 </section>
 
 <section class="wrap sec" id="surface" aria-labelledby="surface-h">
   <header class="sec-head">
-    <p class="eyebrow">01 · Surface</p>
     <h2 id="surface-h">The implied-vol surface</h2>
     <p class="lede">σ(K) is the normal sd that prices bracket edge K around the market's own median. A flat surface means the market
     prices a normal; raised wings mean it prices fat tails. Strikes sit at the market's P(T ≤ K), the way FX desks quote vol by
     delta, so every hour shares one axis.</p>
   </header>
-  <p class="empty" id="empty" hidden>No settled events for this station and period.</p>
+  <div class="empty" id="empty" hidden><p><b>No settled events here</b>Pick another period or station.</p></div>
   <div class="charts" id="surfgrid">
-    <figure class="card c-surf" id="surf-fig">
+    <figure class="fig c-surf" id="surf-fig">
       <figcaption>
         <div class="ttl"><h3>σ by strike and hours left</h3>
           <p class="cap">Median over snapshots, in °F. <span class="fine">Drag to turn it.</span><span class="coarse">Tap Rotate to turn it.</span></p></div>
-        <div class="tools"><button type="button" class="coarse" id="rotate" aria-pressed="false">Rotate</button><button type="button" id="reset">Reset view</button><button type="button" data-t="surf" aria-pressed="false">Table</button></div>
+        <div class="tools">
+          <button type="button" class="coarse" id="rotate" aria-pressed="false">Rotate</button>
+          <button type="button" id="reset">Reset view</button>
+          <div class="seg sm" role="radiogroup" aria-label="View"><label><input type="radio" name="v-surf" value="chart" checked><span>Chart</span></label><label><input type="radio" name="v-surf" value="table"><span>Table</span></label><i class="thumb" aria-hidden="true"></i></div>
+        </div>
       </figcaption>
       <div class="plot" id="surf"></div><div class="view" id="surf-t"></div>
     </figure>
-    <figure class="card c-smile">
+    <figure class="fig c-smile">
       <figcaption>
         <div class="ttl"><h3>The smile at three horizons</h3>
           <p class="cap">Slices of the surface in 2-hour bins: the evening decision falls 30–31&nbsp;h out, the morning one 16–17&nbsp;h.</p></div>
-        <div class="tools"><button type="button" data-t="smile" aria-pressed="false">Table</button></div>
+        <div class="tools"><div class="seg sm" role="radiogroup" aria-label="View"><label><input type="radio" name="v-smile" value="chart" checked><span>Chart</span></label><label><input type="radio" name="v-smile" value="table"><span>Table</span></label><i class="thumb" aria-hidden="true"></i></div></div>
       </figcaption>
       <div class="plot" id="smile"></div><div class="view" id="smile-t"></div>
     </figure>
-    <figure class="card c-term">
+    <figure class="fig c-term">
       <figcaption>
         <div class="ttl"><h3>Implied vs realized, by hours left</h3>
           <p class="cap">The market's sd against the rms error of its mean. Implied above realized: the market is too wide.</p></div>
-        <div class="tools"><button type="button" data-t="term" aria-pressed="false">Table</button></div>
+        <div class="tools"><div class="seg sm" role="radiogroup" aria-label="View"><label><input type="radio" name="v-term" value="chart" checked><span>Chart</span></label><label><input type="radio" name="v-term" value="table"><span>Table</span></label><i class="thumb" aria-hidden="true"></i></div></div>
       </figcaption>
       <div class="plot" id="term"></div><div class="view" id="term-t"></div>
     </figure>
-    <figure class="card c-cal">
+    <figure class="fig c-cal">
       <figcaption>
         <div class="ttl"><h3>Realized − implied P(T ≤ K)</h3>
           <p class="cap">How often the reading settled at or below K, less what the market priced. Red: more often than priced; blue: less often.</p></div>
-        <div class="tools"><button type="button" data-t="cal" aria-pressed="false">Table</button></div>
+        <div class="tools"><div class="seg sm" role="radiogroup" aria-label="View"><label><input type="radio" name="v-cal" value="chart" checked><span>Chart</span></label><label><input type="radio" name="v-cal" value="table"><span>Table</span></label><i class="thumb" aria-hidden="true"></i></div></div>
       </figcaption>
       <div class="plot" id="cal"></div><div class="view" id="cal-t"></div>
     </figure>
@@ -292,7 +352,6 @@ code { padding: 1px 6px; border-radius: 6px; background: var(--sunk); color: var
 
 <section class="wrap sec" id="regimes" aria-labelledby="regimes-h">
   <header class="sec-head">
-    <p class="eyebrow">02 · Regimes</p>
     <h2 id="regimes-h">Three market regimes</h2>
     <p class="lede">Each climate day is a point in five trailing-week features the evening decision can already see: the market's sd,
     the bracket spread, |model − market| in market sds, and the settled errors of the market and of the model two days back. A Gaussian
@@ -300,15 +359,15 @@ code { padding: 1px 6px; border-radius: 6px; background: var(--sunk); color: var
     information the model adds, and the walk-forward blend's return per dollar.</p>
     <p class="note">Follows the Highs / Lows switch; station and period apply to the surface only.</p>
   </header>
-  <div class="regcards" id="regcards"></div>
-  <figure class="card">
+  <div class="cmp" id="cmp" role="table" aria-label="The three regimes compared"></div>
+  <figure class="fig">
     <figcaption>
       <div class="ttl"><h3>Regime by climate day</h3><p class="cap" id="regcap"></p></div>
-      <div class="tools"><button type="button" data-t="reg" aria-pressed="false">Table</button></div>
+      <div class="tools"><div class="seg sm" role="radiogroup" aria-label="View"><label><input type="radio" name="v-reg" value="chart" checked><span>Chart</span></label><label><input type="radio" name="v-reg" value="table"><span>Table</span></label><i class="thumb" aria-hidden="true"></i></div></div>
     </figcaption>
     <div class="plot" id="reg"></div><div class="view" id="reg-t"></div>
   </figure>
-  <details class="card more">
+  <details class="more">
     <summary>Every regime statistic</summary>
     <div class="scroll" id="regtab"></div>
   </details>
@@ -316,7 +375,6 @@ code { padding: 1px 6px; border-radius: 6px; background: var(--sunk); color: var
 
 <section class="wrap sec" id="method" aria-labelledby="method-h">
   <header class="sec-head">
-    <p class="eyebrow">03 · Method</p>
     <h2 id="method-h">How it is built</h2>
   </header>
   <div class="method">
@@ -4260,6 +4318,17 @@ function ends(traces, labels, first) {  // a direct label at each line's right-h
             font: {size: 11, color: tok('--ink-2')}};
   }).filter(Boolean);
 }
+function unstack(gd) {  // lines that end close together stack their labels: lift each clear of the one below
+  // ponytail: runs per render, so a resize that changes the plot's height keeps the old lift until the next render
+  const ya = gd._fullLayout.yaxis, k = ya._length / (ya.range[1] - ya.range[0]), an = gd.layout.annotations, up = {};
+  let floor = -Infinity;
+  an.map((a, i) => [i, a.y * k]).sort((p, q) => p[1] - q[1]).forEach(([i, px]) => {
+    const s = Math.max(0, Math.ceil(floor - px));
+    if (s !== an[i].yshift) up[`annotations[${i}].yshift`] = s;
+    floor = px + s + 17;  // centre to centre: an 11 px label's box is 14 px, plus a 3 px gap
+  });
+  return Object.keys(up).length ? Plotly.relayout(gd, up) : gd;
+}
 function table(el, head, rows) {
   el.innerHTML = '<table><thead><tr>' + head.map(h => `<th>${h}</th>`).join('') + '</tr></thead><tbody>' +
     rows.map(r => '<tr>' + r.map(c => `<td>${c}</td>`).join('') + '</tr>').join('') + '</tbody></table>';
@@ -4280,15 +4349,15 @@ function kpis(S) {
   const fr = b => `F ${D.Fedges[b[0]]}–${D.Fedges[b[b.length - 1] + 1]}`;
   const tl = v => v == null ? ['–', 'Too few snapshots.'] :
     [`${Math.abs(100 * v).toFixed(1)}<small>pts</small>`, `${v >= 0 ? 'Less' : 'More'} often than priced, 16–40&nbsp;h out.`];
-  const tiles = [
+  const rows = [  // two by two on a wide screen: the headline pair, then the two tails side by side
     ['Realized ÷ implied sd, 30&nbsp;h out', f(r), r == null ? 'Too few snapshots 30&nbsp;h out.' : Math.abs(1 - r) < .005 ?
       'The market prices the day about right.' : `The market prices the day ${Math.round(100 * Math.abs(1 - r))}% too ${r < 1 ? 'wide' : 'narrow'}.`],
+    [`Regime on ${R.latest.date}`, `<i class="tick" style="--c:${tok(`--s${R.latest.j + 1}`)}"></i>${L.name}`,
+      `Posterior ${f(R.latest.p)}; spread ${cents(L.spread)}, model information ${f(L.info)}.`],
     [`Bottom tail, ${fr(LO)}`, ...tl(S && tail(S, LO, -1))],
-    [`Top tail, ${fr(HI)}`, ...tl(S && tail(S, HI, 1))],
-    [`Regime on ${R.latest.date}`, `<i class="dot" style="background:${tok(`--s${R.latest.j + 1}`)}"></i>${L.name}`,
-      `Posterior ${f(R.latest.p)}; spread ${cents(L.spread)}, model information ${f(L.info)}.`]];
-  $('kpis').innerHTML = tiles.map(([l, v, n]) =>
-    `<div class="kpi"><p class="kpi-l">${l}</p><p class="kpi-v">${v}</p><p class="kpi-n">${n}</p></div>`).join('');
+    [`Top tail, ${fr(HI)}`, ...tl(S && tail(S, HI, 1))]];
+  $('kpis').innerHTML = rows.map(([l, v, n]) =>
+    `<div class="lr"><dt>${l}</dt><dd class="v">${v}</dd><dd class="n">${n}</dd></div>`).join('');
 }
 
 const bar = () => $('surf').clientWidth >= 520;  // the colorbar repeats the z axis, so a narrow chart drops it
@@ -4334,23 +4403,26 @@ function term(S) {
 }
 function smile(S) {
   const tr = SLICES.map(([h, n], i) => line(D.F, S.sig[D.H.indexOf(h)], n, tok(`--s${i + 1}`)));
+  // in the right margin past each line's end, as in the term chart, so a label never sits on the data
+  const an = ends(tr, SLICES.map(s => s[1]), false).map(a => Object.assign(a, {xanchor: 'left', xshift: 6, yanchor: 'middle', yshift: 0}));
   Plotly.react('smile', tr, layout(axis("strike, as the market's P(T ≤ K)"), axis('σ, °F'),
-    {hovermode: 'x unified', annotations: ends(tr, SLICES.map(s => s[1]), false)}), CFG);
+    {hovermode: 'x unified', annotations: an, margin: {l: 8, r: 76, t: 8, b: 8}}), CFG).then(unstack);
   table($('smile-t'), ['σ °F', ...FLAB], SLICES.map(([h, n]) => [n, ...S.sig[D.H.indexOf(h)].map(v => f(v))]));
 }
+const STATS = [  // the compare rows, one per statistic, a column per regime
+  ['Days', r => `${r.days.toLocaleString()}<small>${(100 * r.recent).toFixed(0)}% of the last&nbsp;30</small>`],
+  ['Bracket spread', r => cents(r.spread)],
+  ['Market sd', r => `${f(r.sd)}&nbsp;°F`],
+  ['Model information', r => f(r.info)],
+  ['MAE vs market', r => `${f(r.mae)}&nbsp;°F`],
+  ['Blend backtest', r => r.trades ? `${pct(r.ret)}<small>per $ on ${r.trades.toLocaleString()} trades</small>` : '–<small>no trades</small>']];
 function regimes() {
   const R = D.regimes[st.kind], col = j => tok(`--s${j + 1}`), L = R.table[R.latest.j];
-  $('regcards').innerHTML = R.table.map((r, j) => `<article class="reg${j === R.latest.j ? ' now' : ''}" style="--c:${col(j)}">
-    <header><span class="ltr">${r.name}</span><div><h3>Regime ${r.name}</h3><p>${r.first.slice(3)} – ${r.last.slice(3)}</p></div>
-      ${j === R.latest.j ? '<span class="pill">Current</span>' : ''}</header>
-    <dl>
-      <div><dt>Days</dt><dd>${r.days.toLocaleString()}<small>${(100 * r.recent).toFixed(0)}% of the last&nbsp;30</small></dd></div>
-      <div><dt>Bracket spread</dt><dd>${cents(r.spread)}</dd></div>
-      <div><dt>Market sd</dt><dd>${f(r.sd)} °F</dd></div>
-      <div><dt>Model information</dt><dd>${f(r.info)}</dd></div>
-      <div><dt>MAE vs market</dt><dd>${f(r.mae)} °F</dd></div>
-      <div><dt>Blend backtest</dt><dd>${r.trades ? pct(r.ret) : '–'}<small>${r.trades ? `per $ on ${r.trades.toLocaleString()} trades` : 'no trades'}</small></dd></div>
-    </dl></article>`).join('');
+  $('cmp').innerHTML = '<div class="cr ch" role="row"><span role="columnheader"></span>' + R.table.map((r, j) =>
+    `<div role="columnheader" style="--c:${col(j)}"><h3><i class="tick"></i>Regime ${r.name}</h3>` +
+    `<p>${r.first.slice(3)} – ${r.last.slice(3)}</p>${j === R.latest.j ? '<p class="now">Current</p>' : ''}</div>`).join('') + '</div>' +
+    STATS.map(([l, v]) => `<div class="cr" role="row"><p class="rl" role="rowheader">${l}</p>` +
+      R.table.map(r => `<p class="rv" role="cell">${v(r)}</p>`).join('') + '</div>').join('');
   $('regcap').textContent = `One tick per climate day, in its regime's row. ${R.latest.date}, the last settled day, is in ` +
     `${L.name} with posterior ${f(R.latest.p)}.`;
   const tr = R.names.map((n, j) => {
@@ -4368,7 +4440,7 @@ function regimes() {
         R.months.map(m => [m[0], ...m.slice(1).map(v => (100 * v).toFixed(0))]));
   table($('regtab'), ['regime', 'days', 'first', 'last', 'of the last 30', 'market sd °F', 'spread $', '|model − market| sd',
     'market error sd', 'model error sd', 'model information', 'MAE model − market °F', 'blend trades', 'return per $'],
-    R.table.map((r, j) => [`<span class="chip" style="background:${col(j)}"></span>${r.name}`, r.days, r.first, r.last,
+    R.table.map((r, j) => [`<i class="tick" style="--c:${col(j)}"></i>${r.name}`, r.days, r.first, r.last,
       (100 * r.recent).toFixed(0) + '%', f(r.sd), f(r.spread, 3), f(r.gap), f(r.err_mkt), f(r.err_model), f(r.info),
       f(r.mae), r.trades.toLocaleString(), pct(r.ret)]));
 }
@@ -4402,27 +4474,36 @@ document.querySelectorAll('input[name="kind"]').forEach(r => r.onchange = () => 
 });
 $('code').onchange = e => { st.code = e.target.value; render(); };
 $('period').onchange = e => { st.period = e.target.value; render(); };
-document.querySelectorAll('button[data-t]').forEach(b => b.onclick = () => {
-  const on = b.closest('figure').classList.toggle('table');
-  b.textContent = on ? 'Chart' : 'Table';
-  b.setAttribute('aria-pressed', on);
-  if (!on) Plotly.Plots.resize($(b.dataset.t));
+document.querySelectorAll('.seg.sm input').forEach(i => {
+  const fig = i.closest('figure');
+  i.onchange = () => {
+    fig.classList.toggle('table', i.value === 'table');
+    if (i.value === 'chart') Plotly.Plots.resize(fig.querySelector('.plot'));
+  };
+  if (i.checked && i.value === 'table') fig.classList.add('table');  // a reload can restore the Table radio
 });
 $('reset').onclick = () => Plotly.relayout('surf', {'scene.camera': cam()});
-$('rotate').onclick = e => {
-  const on = $('surf-fig').classList.toggle('live');
-  e.currentTarget.textContent = on ? 'Done' : 'Rotate';
-  e.currentTarget.setAttribute('aria-pressed', on);
-};
+$('rotate').onclick = e => e.currentTarget.setAttribute('aria-pressed', $('surf-fig').classList.toggle('live'));
 const themeLabel = () => $('theme').setAttribute('aria-label', `Switch to ${dark() ? 'light' : 'dark'} theme`);
 $('theme').onclick = () => {
-  root.dataset.theme = dark() ? 'light' : 'dark';
-  try { localStorage.setItem('kw-theme', root.dataset.theme); } catch (e) {}
-  themeLabel();
-  render();
+  const flip = () => {
+    root.dataset.theme = dark() ? 'light' : 'dark';
+    try { localStorage.setItem('kw-theme', root.dataset.theme); } catch (e) {}
+    themeLabel();
+    render();
+  };
+  // a cross-fade, so the page and its charts change brightness together instead of in a jump
+  document.startViewTransition ? document.startViewTransition(flip) : flip();
 };
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { themeLabel(); render(); });
 themeLabel();
+new IntersectionObserver(([e]) => $('controls').classList.toggle('stuck', e.boundingClientRect.top < 0)).observe($('pin'));
+const jumps = document.querySelectorAll('.jump a');  // the section in the middle of the screen is the current one
+const spy = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && jumps.forEach(a =>
+  a.hash === '#' + e.target.id ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current'))),
+  {rootMargin: '-45% 0px -50% 0px'});
+['glance', 'surface', 'regimes', 'method'].forEach(id => spy.observe($(id)));
+document.addEventListener('touchstart', () => {}, {passive: true});  // lets iOS Safari show :active presses
 // plotly measures its text once, so draw after the web font is in (offline, the load resolves empty and the fallback is used)
 (document.fonts ? document.fonts.load('12px "IBM Plex Sans"', 'aσ') : Promise.resolve()).catch(() => {}).then(render);
 </script>
