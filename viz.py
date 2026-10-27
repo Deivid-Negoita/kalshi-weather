@@ -189,135 +189,373 @@ PAGE = r"""<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Kalshi Vol and Regimes</title>
+<title>Kalshi Weather: Implied Vol and Regimes</title>
+<meta name="description" content="Kalshi's daily temperature brackets read as an options book: an implied-volatility surface checked against the settled readings, and three market regimes.">
+<meta property="og:title" content="Kalshi's temperature markets, read as an options book">
+<meta property="og:description" content="An implied-volatility surface from Kalshi's temperature brackets, checked against the settled readings, and three market regimes.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232a78d6'/%3E%3Cpath d='M9 23v-5M14 23V12M19 23V9M24 23v-7' stroke='%23fff' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400..600&display=swap">
+<script>try { const t = localStorage.getItem('kw-theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (e) {}</script>
 <style>
 :root {
   color-scheme: light;
-  --page: #f9f9f7; --surface: #fcfcfb; --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
-  --grid: #e1e0d9; --axis: #c3c2b7; --ring: rgba(11, 11, 11, .10);
+  --page: #f4f3ee; --surface: #ffffff; --sunk: #ecebe5; --ink: #121316; --ink-2: #47484d; --muted: #6b6c72;
+  --grid: #eceae4; --axis: #cfcdc4; --line: rgba(18, 19, 22, .1); --accent: #1d5bb0; --bar: rgba(244, 243, 238, .84);
+  --shadow: 0 1px 2px rgba(18, 19, 22, .04), 0 10px 28px -16px rgba(18, 19, 22, .14);
   --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --neg: #2a78d6; --mid: #f0efec; --pos: #e34948;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
-    --page: #0d0d0d; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #898781;
-    --grid: #2c2c2a; --axis: #383835; --ring: rgba(255, 255, 255, .10);
+    --page: #0c0d10; --surface: #15161a; --sunk: #1e1f24; --ink: #ecebe6; --ink-2: #b9b8b2; --muted: #8b8a85;
+    --grid: #25262c; --axis: #3a3b42; --line: rgba(255, 255, 255, .08); --accent: #8ab8f2; --bar: rgba(12, 13, 16, .8);
+    --shadow: none;
     --s1: #3987e5; --s2: #d95926; --s3: #199e70; --neg: #3987e5; --mid: #383835; --pos: #e66767;
   }
 }
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --page: #0d0d0d; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #898781;
-  --grid: #2c2c2a; --axis: #383835; --ring: rgba(255, 255, 255, .10);
+  --page: #0c0d10; --surface: #15161a; --sunk: #1e1f24; --ink: #ecebe6; --ink-2: #b9b8b2; --muted: #8b8a85;
+  --grid: #25262c; --axis: #3a3b42; --line: rgba(255, 255, 255, .08); --accent: #8ab8f2; --bar: rgba(12, 13, 16, .8);
+  --shadow: none;
   --s1: #3987e5; --s2: #d95926; --s3: #199e70; --neg: #3987e5; --mid: #383835; --pos: #e66767;
 }
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
-body { margin: 0; background: var(--page); color: var(--ink); font: 14px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
-main { max-width: 1240px; margin: 0 auto; padding: 24px 16px 56px; }
-h1 { font-size: 22px; line-height: 1.25; margin: 0 0 4px; }
-h2 { font-size: 17px; margin: 40px 0 4px; }
-h3 { font-size: 14px; margin: 20px 0 6px; }
-p { margin: 0 0 8px; max-width: 80ch; color: var(--ink-2); }
-.meta { color: var(--muted); font-size: 12px; }
-.filters { display: flex; flex-wrap: wrap; gap: 12px; margin: 16px 0 10px; }
-.filters label { display: grid; gap: 2px; font-size: 12px; color: var(--ink-2); }
-select { font: inherit; font-size: 13px; padding: 5px 8px; border-radius: 6px; border: 1px solid var(--axis);
-  background: var(--surface); color: var(--ink); min-width: 140px; }
-.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 540px), 1fr)); gap: 16px; }
-figure { margin: 0; background: var(--surface); border: 1px solid var(--ring); border-radius: 10px; padding: 12px; min-width: 0; }
-figcaption { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
-figcaption b { font-size: 14px; font-weight: 600; color: var(--ink); }
-.cap { font-size: 12px; margin: 2px 0 6px; }
-.plot { height: 380px; }
-.tall .plot { height: 460px; }
-.view { display: none; overflow: auto; max-height: 460px; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+body { margin: 0; background: var(--page); color: var(--ink); -webkit-font-smoothing: antialiased;
+  font: 15px/1.55 "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif; }
+::selection { background: color-mix(in srgb, var(--s1) 28%, transparent); }
+a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.wrap { width: 100%; max-width: 1240px; margin: 0 auto; padding-left: 16px; padding-right: 16px; }
+@media (min-width: 720px) { .wrap { padding-left: 28px; padding-right: 28px; } }
+h1, h2 { font-family: Newsreader, Georgia, "Times New Roman", serif; font-weight: 500; letter-spacing: -.015em; text-wrap: balance; }
+p { text-wrap: pretty; }
+.eyebrow { margin: 0 0 12px; font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+
+.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 64px; }
+.mark { display: inline-flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; font-size: 15px; font-weight: 600; }
+.mark svg { flex: none; width: 24px; height: 24px; }
+.mark rect { fill: var(--s1); }
+.mark path { fill: none; stroke: #fff; stroke-width: 3; stroke-linecap: round; }
+.links { display: flex; align-items: center; gap: 4px; }
+.links a { display: inline-flex; align-items: center; gap: 4px; padding: 8px 10px; border-radius: 8px; color: var(--ink-2);
+  text-decoration: none; font-size: 14px; font-weight: 500; }
+.links a:hover { color: var(--ink); background: var(--sunk); }
+.ext { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+
+.hero { position: relative; isolation: isolate; padding: 28px 0 40px; }
+.hero::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 32px 32px; background-position: -1px -1px;
+  -webkit-mask-image: radial-gradient(120% 90% at 85% 0%, #000, transparent 65%); mask-image: radial-gradient(120% 90% at 85% 0%, #000, transparent 65%); }
+h1 { max-width: 13em; margin: 0 0 18px; font-size: clamp(36px, 6.4vw, 64px); line-height: 1.02; }
+.dek { max-width: 64ch; margin: 0 0 18px; font-size: clamp(16px, 1.6vw, 18.5px); line-height: 1.6; color: var(--ink-2); }
+.byline { margin: 0 0 24px; font-size: 13.5px; color: var(--muted); }
+.byline b { color: var(--ink); font-weight: 600; }
+.cta { display: flex; flex-wrap: wrap; gap: 10px; }
+.btn { display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border-radius: 11px; border: 1px solid var(--line);
+  background: var(--surface); color: var(--ink); box-shadow: var(--shadow); font-size: 15px; font-weight: 500; text-decoration: none; }
+.btn:hover { border-color: var(--axis); }
+.btn.primary { background: var(--ink); border-color: var(--ink); color: var(--page); }
+.btn.primary:hover { opacity: .88; }
+
+.bar { position: sticky; top: 0; z-index: 20; background: var(--bar); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  -webkit-backdrop-filter: saturate(1.5) blur(14px); backdrop-filter: saturate(1.5) blur(14px); }
+.bar-in { display: flex; align-items: center; gap: 8px; padding-top: 8px; padding-bottom: 8px; }
+.seg { display: flex; flex: none; height: 44px; padding: 3px; gap: 2px; border-radius: 11px; background: var(--sunk); border: 1px solid var(--line); }
+.seg label { position: relative; display: flex; }
+.seg input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.seg span { display: flex; align-items: center; padding: 0 12px; border-radius: 8px; font-size: 14px; font-weight: 500; color: var(--ink-2); }
+.seg input:checked + span { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(0, 0, 0, .1), 0 0 0 1px var(--line); }
+.seg input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 1px; }
+.sel { position: relative; display: block; min-width: 0; }
+.sel-s { flex: 0 0 96px; }
+.sel-p { flex: 0 1 150px; }
+.sel span { position: absolute; left: 11px; top: 6px; font-size: 10.5px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase;
+  color: var(--muted); pointer-events: none; }
+.sel::after { content: ""; position: absolute; right: 12px; top: 50%; width: 6px; height: 6px; margin-top: -5px; pointer-events: none;
+  border: solid var(--muted); border-width: 0 1.5px 1.5px 0; transform: rotate(45deg); }
+.sel select { -webkit-appearance: none; appearance: none; display: block; width: 100%; height: 44px; margin: 0; padding: 17px 26px 3px 10px;
+  font: inherit; font-size: 15px; font-weight: 500; color: var(--ink); background: var(--surface); border: 1px solid var(--line);
+  border-radius: 11px; cursor: pointer; text-overflow: ellipsis; }
+.sel select:hover { border-color: var(--axis); }
+@media (max-width: 719px) { .sel select { font-size: 16px; } }
+.jump { display: none; margin-left: auto; gap: 2px; }
+.jump a { padding: 8px 12px; border-radius: 8px; color: var(--ink-2); text-decoration: none; font-size: 14px; font-weight: 500; }
+.jump a:hover { color: var(--ink); background: var(--sunk); }
+@media (min-width: 860px) { .jump { display: flex; } }
+
+.glance { padding-top: 22px; }
+.scope { margin: 0 0 12px; font-size: 14px; color: var(--ink-2); }
+.scope b { margin-right: 8px; color: var(--ink); font-weight: 600; }
+.kpis { display: grid; gap: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (min-width: 900px) { .kpis { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; } }
+.kpi { padding: 14px 16px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); }
+.kpi-l { margin: 0 0 8px; font-size: 12.5px; font-weight: 500; line-height: 1.35; color: var(--muted); }
+.kpi-v { display: flex; align-items: baseline; gap: 10px; margin: 0 0 6px; letter-spacing: -.01em;
+  font: 500 clamp(30px, 3.6vw, 42px)/1 Newsreader, Georgia, serif; font-variant-numeric: lining-nums tabular-nums; }
+.kpi-v small { margin-left: -5px; font: 500 14px/1 "IBM Plex Sans", system-ui, sans-serif; color: var(--muted); }
+.kpi-n { margin: 0; font-size: 13px; line-height: 1.45; color: var(--ink-2); }
+.dot { display: inline-block; flex: none; align-self: center; width: 12px; height: 12px; border-radius: 4px; }
+
+.sec { padding-top: 64px; scroll-margin-top: 4px; }
+.sec-head { max-width: 780px; margin-bottom: 22px; }
+h2 { margin: 0 0 12px; font-size: clamp(28px, 3.6vw, 40px); line-height: 1.08; }
+.lede { margin: 0 0 10px; font-size: 16px; line-height: 1.6; color: var(--ink-2); }
+.note { margin: 0; font-size: 13px; color: var(--muted); }
+.empty { margin: 0; padding: 32px 20px; text-align: center; color: var(--ink-2); background: var(--surface); border: 1px dashed var(--axis); border-radius: 14px; }
+
+.charts { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 980px) {
+  .charts { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+  .c-surf, .c-cal { grid-column: span 7; }
+  .c-smile, .c-term { grid-column: span 5; }
+}
+.card { min-width: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); }
+figure.card { margin: 0; padding: 16px 16px 10px; }
+figcaption { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 8px 12px; margin-bottom: 8px; }
+.ttl { flex: 1 1 220px; min-width: 0; }
+.ttl h3 { margin: 0; font-size: 15px; font-weight: 600; line-height: 1.35; }
+.cap { margin: 3px 0 0; font-size: 13px; line-height: 1.45; color: var(--muted); }
+.tools { display: flex; flex-wrap: wrap; gap: 6px; }
+button { font: inherit; font-size: 13px; font-weight: 500; line-height: 1.2; color: var(--ink-2); background: var(--surface);
+  border: 1px solid var(--line); border-radius: 8px; padding: 6px 11px; cursor: pointer; }
+button:hover { color: var(--ink); border-color: var(--axis); }
+button[aria-pressed="true"] { color: var(--ink); background: var(--sunk); }
+.icon { display: inline-grid; place-items: center; width: 38px; height: 38px; padding: 0; border-radius: 10px; }
+.icon svg { width: 18px; height: 18px; }
+.icon circle { fill: none; stroke: currentColor; stroke-width: 1.7; }
+.icon path { fill: currentColor; }
+.plot { height: 340px; }
+.c-surf .plot { height: min(340px, 75vw); }  /* a phone's box fits its width with no zoom-out */
+#reg { height: 190px; }
+@media (min-width: 980px) {
+  .c-surf .plot, .c-smile .plot { height: 440px; }
+  .c-term .plot, .c-cal .plot { height: 390px; }
+}
+.view { display: none; max-height: 440px; overflow: auto; }
 figure.table .plot { display: none; }
 figure.table .view { display: block; }
-button { font: inherit; font-size: 12px; color: var(--ink-2); background: none; border: 1px solid var(--axis);
-  border-radius: 6px; padding: 2px 10px; cursor: pointer; flex: none; }
-button:focus-visible, select:focus-visible { outline: 2px solid var(--s1); outline-offset: 2px; }
-table { border-collapse: collapse; width: 100%; font-size: 12px; font-variant-numeric: tabular-nums; }
-th, td { padding: 4px 8px; text-align: right; border-bottom: 1px solid var(--grid); white-space: nowrap; }
-th { color: var(--ink-2); font-weight: 600; position: sticky; top: 0; background: var(--surface); }
-th:first-child, td:first-child { text-align: left; }
-.chip { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
-.callout { background: var(--surface); border: 1px solid var(--ring); border-radius: 10px; padding: 10px 14px; margin: 12px 0; color: var(--ink); }
-.card { background: var(--surface); border: 1px solid var(--ring); border-radius: 10px; padding: 4px 4px 8px; overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 12.5px; font-variant-numeric: tabular-nums; }
+th, td { padding: 6px 10px; text-align: right; white-space: nowrap; border-bottom: 1px solid var(--grid); }
+th { position: sticky; top: 0; z-index: 1; background: var(--surface); color: var(--ink-2); font-weight: 600; }
+th:first-child, td:first-child { position: sticky; left: 0; text-align: left; background: var(--surface); }
+th:first-child { z-index: 2; }
+.chip { display: inline-block; width: 10px; height: 10px; margin-right: 6px; border-radius: 3px; vertical-align: -1px; }
+
+.regcards { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr)); margin-bottom: 16px; }
+.reg { padding: 16px 16px 18px; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); }
+.reg.now { border-color: color-mix(in srgb, var(--c) 60%, var(--line)); }
+.reg header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.ltr { display: grid; place-items: center; flex: none; width: 36px; height: 36px; border-radius: 50%; border: 2.5px solid var(--c);
+  font: 600 17px/1 Newsreader, Georgia, serif; }
+.reg h3 { margin: 0; font-size: 15px; font-weight: 600; }
+.reg header p { margin: 1px 0 0; font-size: 13px; color: var(--muted); }
+.pill { display: inline-flex; align-items: center; gap: 6px; margin-left: auto; padding: 4px 10px; border-radius: 999px; background: var(--sunk);
+  font-size: 12px; font-weight: 600; }
+.pill::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--c); }
+.reg dl { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px 12px; margin: 0; }
+.reg dt { font-size: 12px; line-height: 1.3; color: var(--muted); }
+.reg dd { margin: 4px 0 0; font-size: 17px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.reg dd small { display: block; margin-top: 2px; font-size: 12px; font-weight: 400; line-height: 1.3; color: var(--muted); }
+details.more { margin-top: 16px; }
+details.more summary { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; cursor: pointer;
+  font-size: 14px; font-weight: 600; list-style: none; }
+details.more summary::-webkit-details-marker { display: none; }
+details.more summary::after { content: "+"; font-size: 18px; font-weight: 400; line-height: 1; color: var(--muted); }
+details.more[open] summary::after { content: "−"; }
+.scroll { overflow-x: auto; padding: 0 6px 8px; }
+
+.method { display: grid; gap: 20px 24px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); }
+.method > div { padding-top: 14px; border-top: 1px solid var(--axis); }
+.method h3 { margin: 0 0 6px; font-size: 15px; font-weight: 600; }
+.method p { margin: 0; font-size: 14.5px; color: var(--ink-2); }
+.eq { font-family: Newsreader, Georgia, serif; font-size: 1.08em; font-style: italic; white-space: nowrap; color: var(--ink); }
+code { padding: 1px 6px; border-radius: 6px; background: var(--sunk); color: var(--ink); font: 13px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; margin-top: 72px; padding-top: 22px; padding-bottom: 44px;
+  border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); }
+.foot p { margin: 0; }
+
+@media (pointer: coarse) {
+  .fine { display: none; }
+  #surf-fig:not(.live) #surf { pointer-events: none; }  /* a touch scrolls the page until Rotate is on */
+  .tools button { padding: 9px 13px; }
+}
+@media not all and (pointer: coarse) { .coarse { display: none; } }
 </style>
 </head>
 <body>
+<header class="top wrap">
+  <a class="mark" href="#top"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8"/><path d="M9 23v-5M14 23V12M19 23V9M24 23v-7"/></svg>Kalshi weather</a>
+  <nav class="links" aria-label="Project">
+    <a href="https://github.com/Deivid-Negoita/kalshi-weather">GitHub<svg class="ext" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 11 11 5M6 5h5v5"/></svg></a>
+    <button class="icon" id="theme" type="button" aria-label="Switch theme"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z"/></svg></button>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Prediction markets · Implied volatility</p>
+    <h1>Kalshi's temperature markets, read as an options book</h1>
+    <p class="dek">Each day Kalshi lists a ladder of brackets on the high and the low at US weather stations, and each bracket pays $1
+    if the official reading lands in it. Read together, the prices are the market's distribution for the day. Inverted, they give an
+    implied-volatility surface that can be checked against what the thermometer read.</p>
+    <p class="byline">By <b>Deivid-Bogdan Negoiță</b><span id="meta"></span></p>
+    <div class="cta">
+      <a class="btn primary" href="https://github.com/Deivid-Negoita/kalshi-weather">View the code</a>
+      <a class="btn" href="https://github.com/Deivid-Negoita/kalshi-weather#readme">Read the write-up</a>
+    </div>
+  </div>
+</section>
+
+<div class="bar">
+  <div class="wrap bar-in">
+    <div class="seg" role="radiogroup" aria-label="Reading">
+      <label><input type="radio" name="kind" value="high" checked><span>Highs</span></label>
+      <label><input type="radio" name="kind" value="low"><span>Lows</span></label>
+    </div>
+    <label class="sel sel-s"><span>Station</span><select id="code"></select></label>
+    <label class="sel sel-p"><span>Period</span><select id="period"></select></label>
+    <nav class="jump" aria-label="Sections"><a href="#surface">Surface</a><a href="#regimes">Regimes</a><a href="#method">Method</a></nav>
+  </div>
+</div>
+
 <main>
-<h1>Kalshi temperature brackets: implied vol and market regimes</h1>
-<p class="meta" id="meta"></p>
-<div class="filters">
-  <label>Kind <select id="kind"><option value="high">Daily high</option><option value="low">Daily low</option></select></label>
-</div>
+<section class="wrap glance" aria-label="At a glance">
+  <p class="scope" id="sub"></p>
+  <div class="kpis" id="kpis"></div>
+</section>
 
-<h2>Implied-vol surface</h2>
-<p>Each event's brackets at every hour of its last 40, mids normalised into the market's distribution. σ(K) is the
-normal sd that prices bracket edge K around the market's own median: a flat surface means the market prices a normal,
-higher wings mean it prices fat tails. Strikes sit at the market's P(T ≤ K), the way FX desks quote vol by delta, so
-every hour shares one axis.</p>
-<div class="filters">
-  <label>Station <select id="code"></select></label>
-  <label>Period <select id="period"></select></label>
-</div>
-<p class="meta" id="sub"></p>
-<div class="grid" id="surfgrid">
-  <figure class="tall"><figcaption><b>σ by strike and hours left</b><button data-t="surf">Table</button></figcaption>
-    <p class="cap">Median over snapshots. Drag to turn it.</p>
-    <div class="plot" id="surf"></div><div class="view" id="surf-t"></div></figure>
-  <figure class="tall"><figcaption><b>Realized − implied P(T ≤ K)</b><button data-t="cal">Table</button></figcaption>
-    <p class="cap">How often the value settled at or below K, less what the market priced. Red: settled there more often than priced.</p>
-    <div class="plot" id="cal"></div><div class="view" id="cal-t"></div></figure>
-  <figure><figcaption><b>Implied vs realized, by hours left</b><button data-t="term">Table</button></figcaption>
-    <p class="cap">The market's sd (rms) against the rms error of its mean. Implied above realized: the market is too wide.</p>
-    <div class="plot" id="term"></div><div class="view" id="term-t"></div></figure>
-  <figure><figcaption><b>Smile at three times</b><button data-t="smile">Table</button></figcaption>
-    <p class="cap">Slices of the surface in 2-hour bins: the eve decision falls in 30–31 h left, the morning one in 16–17 h.</p>
-    <div class="plot" id="smile"></div><div class="view" id="smile-t"></div></figure>
-</div>
+<section class="wrap sec" id="surface" aria-labelledby="surface-h">
+  <header class="sec-head">
+    <p class="eyebrow">01 · Surface</p>
+    <h2 id="surface-h">The implied-vol surface</h2>
+    <p class="lede">σ(K) is the normal sd that prices bracket edge K around the market's own median. A flat surface means the market
+    prices a normal; raised wings mean it prices fat tails. Strikes sit at the market's P(T ≤ K), the way FX desks quote vol by
+    delta, so every hour shares one axis.</p>
+  </header>
+  <p class="empty" id="empty" hidden>No settled events for this station and period.</p>
+  <div class="charts" id="surfgrid">
+    <figure class="card c-surf" id="surf-fig">
+      <figcaption>
+        <div class="ttl"><h3>σ by strike and hours left</h3>
+          <p class="cap">Median over snapshots, in °F. <span class="fine">Drag to turn it.</span><span class="coarse">Tap Rotate to turn it.</span></p></div>
+        <div class="tools"><button type="button" class="coarse" id="rotate" aria-pressed="false">Rotate</button><button type="button" id="reset">Reset view</button><button type="button" data-t="surf" aria-pressed="false">Table</button></div>
+      </figcaption>
+      <div class="plot" id="surf"></div><div class="view" id="surf-t"></div>
+    </figure>
+    <figure class="card c-smile">
+      <figcaption>
+        <div class="ttl"><h3>The smile at three horizons</h3>
+          <p class="cap">Slices of the surface in 2-hour bins: the evening decision falls 30–31 h out, the morning one 16–17 h.</p></div>
+        <div class="tools"><button type="button" data-t="smile" aria-pressed="false">Table</button></div>
+      </figcaption>
+      <div class="plot" id="smile"></div><div class="view" id="smile-t"></div>
+    </figure>
+    <figure class="card c-term">
+      <figcaption>
+        <div class="ttl"><h3>Implied vs realized, by hours left</h3>
+          <p class="cap">The market's sd against the rms error of its mean. Implied above realized: the market is too wide.</p></div>
+        <div class="tools"><button type="button" data-t="term" aria-pressed="false">Table</button></div>
+      </figcaption>
+      <div class="plot" id="term"></div><div class="view" id="term-t"></div>
+    </figure>
+    <figure class="card c-cal">
+      <figcaption>
+        <div class="ttl"><h3>Realized − implied P(T ≤ K)</h3>
+          <p class="cap">How often the reading settled at or below K, less what the market priced. Red: more often than priced; blue: less often.</p></div>
+        <div class="tools"><button type="button" data-t="cal" aria-pressed="false">Table</button></div>
+      </figcaption>
+      <div class="plot" id="cal"></div><div class="view" id="cal-t"></div>
+    </figure>
+  </div>
+</section>
 
-<h2>Market regimes</h2>
-<p>Each climate day is a point in five trailing-week features known before that day's eve decision: the market's sd,
-the bracket spread, |model − market| in market sds, and the settled errors of the market and of the model in market
-sds, two days back. A Gaussian mixture splits the days into three regimes, lettered by when they occur. Each is scored
-on what the features never see: the information the model adds, corr(mu − mkt, y − mkt), and the walk-forward
-blend's one-contract return per $ (THETA, NO on the favourite skipped).</p>
-<div class="callout" id="latest"></div>
-<figure><figcaption><b>Regime by climate day</b><button data-t="reg">Table</button></figcaption>
-  <p class="cap">One tick per day in its regime's row. The table view gives each month's share of days.</p>
-  <div class="plot" id="reg" style="height: 200px"></div><div class="view" id="reg-t"></div></figure>
-<h3>What each regime looks like, and what the strategy did in it</h3>
-<div class="card" id="regtab"></div>
+<section class="wrap sec" id="regimes" aria-labelledby="regimes-h">
+  <header class="sec-head">
+    <p class="eyebrow">02 · Regimes</p>
+    <h2 id="regimes-h">Three market regimes</h2>
+    <p class="lede">Each climate day is a point in five trailing-week features the evening decision can already see: the market's sd,
+    the bracket spread, |model − market| in market sds, and the settled errors of the market and of the model two days back. A Gaussian
+    mixture splits the days into three regimes, lettered by when they occur. Each is scored on what the features never see: the
+    information the model adds, and the walk-forward blend's return per dollar.</p>
+    <p class="note">Follows the Highs / Lows switch; station and period apply to the surface only.</p>
+  </header>
+  <div class="regcards" id="regcards"></div>
+  <figure class="card">
+    <figcaption>
+      <div class="ttl"><h3>Regime by climate day</h3><p class="cap" id="regcap"></p></div>
+      <div class="tools"><button type="button" data-t="reg" aria-pressed="false">Table</button></div>
+    </figcaption>
+    <div class="plot" id="reg"></div><div class="view" id="reg-t"></div>
+  </figure>
+  <details class="card more">
+    <summary>Every regime statistic</summary>
+    <div class="scroll" id="regtab"></div>
+  </details>
+</section>
+
+<section class="wrap sec" id="method" aria-labelledby="method-h">
+  <header class="sec-head">
+    <p class="eyebrow">03 · Method</p>
+    <h2 id="method-h">How it is built</h2>
+  </header>
+  <div class="method">
+    <div><h3>The inversion</h3><p>Bracket mids are normalised into a distribution. At each edge K the market's CDF F gives
+      <span class="eq">σ(K) = (K − median) / Φ<sup>−1</sup>(F)</span>, the normal sd that prices that edge.</p></div>
+    <div><h3>The strike axis</h3><p>Strikes sit at F, the way FX desks quote vol by delta, so all 40 hours share one axis. Each
+      cell is the median over its snapshots.</p></div>
+    <div><h3>The data</h3><p>Every whole event (a tail at each end, no gaps, every bracket quoted) at each of the 40 hours before its
+      climate day ends. A cell or hour with fewer than <span id="minn">30</span> snapshots is left blank.</p></div>
+    <div><h3>The check</h3><p><code>python viz.py check</code> feeds the inversion a market that prices a normal exactly. The surface
+      comes back flat at that sd, with the median in place.</p></div>
+    <div><h3>The regimes</h3><p>A three-component Gaussian mixture over the standardised features. BIC keeps falling past three
+      without an elbow; the page stops at three because past that the regime colours stop being told apart under colour blindness.</p></div>
+  </div>
+</section>
 </main>
+
+<footer class="wrap"><div class="foot">
+  <p>Code and the full write-up: <a href="https://github.com/Deivid-Negoita/kalshi-weather">github.com/Deivid-Negoita/kalshi-weather</a>. MIT licence.</p>
+  <p id="built"></p>
+</div></footer>
 <script>/*PLOTLY*/</script>
 <script>
 const D = /*DATA*/;
 const $ = id => document.getElementById(id);
-const tok = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
-const FONT = 'system-ui, -apple-system, "Segoe UI", sans-serif';
-const CFG = {displaylogo: false, responsive: true};
+const root = document.documentElement;
+const tok = n => getComputedStyle(root).getPropertyValue(n).trim();
+const dark = () => getComputedStyle(root).colorScheme === 'dark';
+const FONT = '"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif';
+const CFG = {displaylogo: false, displayModeBar: false, responsive: true, scrollZoom: false};
 const SEQ = ['#cde2fb', '#b7d3f6', '#9ec5f4', '#86b6ef', '#6da7ec', '#5598e7', '#3987e5', '#2a78d6', '#256abf',
              '#1c5cab', '#184f95', '#104281', '#0d366b'];
 const FEATS = ['sd', 'spread', 'gap', 'err_mkt', 'err_model'];
 const SLICES = [[30, '30–31 h left'], [16, '16–17 h left'], [8, '8–9 h left']];
+const KIND = {high: 'Highs', low: 'Lows'};
+const LO = [0, 1, 2], HI = [9, 10, 11];  // the F bins of the bottom and top tails
+const H30 = D.H.indexOf(30);
 const st = {kind: 'high', code: 'all', period: 'all'};
-const f = (v, d = 2) => v == null ? '–' : v.toFixed(d);
-const pct = v => v == null ? '–' : (v > 0 ? '+' : '') + (100 * v).toFixed(1) + '%';
+const f = (v, d = 2) => v == null ? '–' : v.toFixed(d).replace('-', '−');
+const pct = v => v == null ? '–' : (v > 0 ? '+' : '') + (100 * v).toFixed(1).replace('-', '−') + '%';
+const cents = v => v == null ? '–' : (100 * v).toFixed(1) + '¢';
 const FLAB = D.Fedges.slice(0, -1).map((a, i) => `${a}–${D.Fedges[i + 1]}`);
 const HLAB = D.H.map(h => `${h}–${h + 1} h`);
+const hl = () => ({bgcolor: tok('--surface'), bordercolor: tok('--axis'), font: {family: FONT, color: tok('--ink')}});
 
 function axis(title, extra) {
-  return Object.assign({title: {text: title, font: {color: tok('--ink-2')}}, gridcolor: tok('--grid'),
-    linecolor: tok('--axis'), zeroline: false, tickfont: {color: tok('--muted')}, automargin: true}, extra);
+  return Object.assign({title: {text: title, font: {color: tok('--ink-2')}}, gridcolor: tok('--grid'), linecolor: tok('--axis'),
+    zeroline: false, tickfont: {color: tok('--muted')}, automargin: true, fixedrange: true}, extra);
 }
-function layout(xa, ya, extra) {
-  return Object.assign({paper_bgcolor: tok('--surface'), plot_bgcolor: tok('--surface'), uirevision: 1,
+function layout(xa, ya, extra) {  // dragmode false: a touch on a chart scrolls the page instead of zooming it
+  return Object.assign({paper_bgcolor: tok('--surface'), plot_bgcolor: tok('--surface'), uirevision: 1, dragmode: false,
     font: {family: FONT, size: 12, color: tok('--ink-2')}, margin: {l: 8, r: 8, t: 8, b: 8}, xaxis: xa, yaxis: ya,
-    legend: {orientation: 'h', x: 0, y: 1.02, yanchor: 'bottom'},
-    hoverlabel: {bgcolor: tok('--surface'), bordercolor: tok('--axis'), font: {family: FONT, color: tok('--ink')}}}, extra);
+    legend: {orientation: 'h', x: 0, y: 1.02, yanchor: 'bottom'}, hoverlabel: hl()}, extra);
 }
 const line = (x, y, name, color) => ({x, y, name, type: 'scatter', mode: 'lines+markers', line: {color, width: 2},
   marker: {size: 8, color, line: {color: tok('--surface'), width: 2}}, hovertemplate: `${name}: %{y:.2f} °F<extra></extra>`});
@@ -336,20 +574,50 @@ function table(el, head, rows) {
 }
 const grid = (z, d) => z.map((row, i) => [HLAB[i], ...row.map(v => f(v, d))]);
 
+function tail(S, bins, sign) {  // realized − implied P(T ≤ K) over the bins 16 to 40 h out, weighted by snapshots
+  let a = 0, w = 0;
+  D.H.forEach((h, i) => h >= 16 && bins.forEach(j => {
+    const c = S.cal[i][j], n = S.n[i][j];
+    if (c != null && n) { a += c * n; w += n; }
+  }));
+  return w ? sign * a / w : null;
+}
+function kpis(S) {
+  const R = D.regimes[st.kind], L = R.table[R.latest.j];
+  const r = S && S.real[H30] != null && S.imp[H30] != null ? S.real[H30] / S.imp[H30] : null;
+  const fr = b => `F ${D.Fedges[b[0]]}–${D.Fedges[b[b.length - 1] + 1]}`;
+  const tl = v => v == null ? ['–', 'Too few snapshots.'] :
+    [`${Math.abs(100 * v).toFixed(1)}<small>pts</small>`, `${v >= 0 ? 'Less' : 'More'} often than priced, 16–40 h out.`];
+  const tiles = [
+    ['Realized ÷ implied sd, 30 h out', f(r), r == null ? 'Too few snapshots 30 h out.' : Math.abs(1 - r) < .005 ?
+      'The market prices the day about right.' : `The market prices the day ${Math.round(100 * Math.abs(1 - r))}% too ${r < 1 ? 'wide' : 'narrow'}.`],
+    [`Bottom tail, ${fr(LO)}`, ...tl(S && tail(S, LO, -1))],
+    [`Top tail, ${fr(HI)}`, ...tl(S && tail(S, HI, 1))],
+    [`Regime on ${R.latest.date}`, `<i class="dot" style="background:${tok(`--s${R.latest.j + 1}`)}"></i>${L.name}`,
+      `Posterior ${f(R.latest.p)}; spread ${cents(L.spread)}, model information ${f(L.info)}.`]];
+  $('kpis').innerHTML = tiles.map(([l, v, n]) =>
+    `<div class="kpi"><p class="kpi-l">${l}</p><p class="kpi-v">${v}</p><p class="kpi-n">${n}</p></div>`).join('');
+}
+
+const bar = () => $('surf').clientWidth >= 520;  // the colorbar repeats the z axis, so a narrow chart drops it
+function cam() {  // zoom out when narrow; the colorbar takes ~70 px
+  const el = $('surf'), w = el.clientWidth - (bar() ? 70 : 0), k = w > 0 ? Math.max(1, el.clientHeight / w / .92) : 1;
+  // the look-at point sits low: the near edges and their titles draw larger than the far ones
+  return {eye: {x: 1.55 * k, y: 1.45 * k, z: .75 * k}, center: {x: 0, y: 0, z: -.15}};
+}
 function surf(S) {
-  const cs = (tok('--surface') === '#1a1a19' ? [...SEQ].reverse() : SEQ).map((c, i, a) => [i / (a.length - 1), c]);
+  const cs = (dark() ? [...SEQ].reverse() : SEQ).map((c, i, a) => [i / (a.length - 1), c]);
   const sa = t => ({title: {text: t}, gridcolor: tok('--grid'), linecolor: tok('--axis'), backgroundcolor: tok('--surface'),
     showbackground: true, color: tok('--ink-2'), tickfont: {color: tok('--muted')}});
-  const el = $('surf'), k = el.clientWidth ? Math.max(1, el.clientHeight / (el.clientWidth - 70) / .92) : 1;  // zoom out when narrow; the colorbar takes ~70 px
-  Plotly.react('surf', [{type: 'surface', x: D.F, y: D.H, z: S.sig, colorscale: cs,
+  Plotly.react('surf', [{type: 'surface', x: D.F, y: D.H, z: S.sig, colorscale: cs, showscale: bar(),
     colorbar: {title: {text: 'σ, °F'}, thickness: 10, len: .7, outlinewidth: 0, tickfont: {color: tok('--muted')}},
     hovertemplate: 'P(T ≤ K) %{x:.2f}, %{y} h left<br>σ %{z:.2f} °F<extra></extra>'}],
     {paper_bgcolor: tok('--surface'), uirevision: 1, font: {family: FONT, size: 11, color: tok('--ink-2')},
-     margin: {l: 0, r: 0, t: 0, b: 0},
-     hoverlabel: {bgcolor: tok('--surface'), bordercolor: tok('--axis'), font: {family: FONT, color: tok('--ink')}},
-     scene: {xaxis: sa('P(T ≤ K)'), zaxis: sa('σ, °F'),  // no 40 tick: it sat on the z axis's lowest one
+     margin: {l: 0, r: 0, t: 0, b: 0}, hoverlabel: hl(),
+     scene: {xaxis: sa('P(T ≤ K)'), zaxis: sa(bar() ? 'σ, °F' : ''),  // narrow, the z title clips at the edge; the caption has °F
+             // no 40 tick: it sat on the z axis's lowest one
              yaxis: Object.assign(sa('hours left'), {autorange: 'reversed', tickvals: [0, 10, 20, 30]}),
-             camera: {eye: {x: 1.55 * k, y: 1.45 * k, z: .75 * k}}, aspectratio: {x: 1, y: 1.25, z: .7}}}, CFG);
+             camera: cam(), aspectratio: {x: 1, y: 1.25, z: .7}}}, CFG);
   table($('surf-t'), ['σ °F, hours left', ...FLAB], grid(S.sig, 2));
 }
 function cal(S) {
@@ -380,9 +648,19 @@ function smile(S) {
 }
 function regimes() {
   const R = D.regimes[st.kind], col = j => tok(`--s${j + 1}`), L = R.table[R.latest.j];
-  $('latest').innerHTML = `<b>${R.latest.date}</b>, the last day with settled data: ${st.kind}s are in regime ` +
-    `<span class="chip" style="background:${col(R.latest.j)}"></span><b>${L.name}</b> (posterior ${f(R.latest.p)}). ` +
-    `Across ${L.name}'s ${L.days} days the model's information was ${f(L.info)} and the blend made ${pct(L.ret)} per $ on ${L.trades.toLocaleString()} trades.`;
+  $('regcards').innerHTML = R.table.map((r, j) => `<article class="reg${j === R.latest.j ? ' now' : ''}" style="--c:${col(j)}">
+    <header><span class="ltr">${r.name}</span><div><h3>Regime ${r.name}</h3><p>${r.first.slice(3)} – ${r.last.slice(3)}</p></div>
+      ${j === R.latest.j ? '<span class="pill">Current</span>' : ''}</header>
+    <dl>
+      <div><dt>Days</dt><dd>${r.days.toLocaleString()}<small>${(100 * r.recent).toFixed(0)}% of the last&nbsp;30</small></dd></div>
+      <div><dt>Bracket spread</dt><dd>${cents(r.spread)}</dd></div>
+      <div><dt>Market sd</dt><dd>${f(r.sd)} °F</dd></div>
+      <div><dt>Model information</dt><dd>${f(r.info)}</dd></div>
+      <div><dt>MAE vs market</dt><dd>${f(r.mae)} °F</dd></div>
+      <div><dt>Blend backtest</dt><dd>${r.trades ? pct(r.ret) : '–'}<small>${r.trades ? `per $ on ${r.trades.toLocaleString()} trades` : 'no trades'}</small></dd></div>
+    </dl></article>`).join('');
+  $('regcap').textContent = `One tick per climate day, in its regime's row. ${R.latest.date}, the last settled day, is in ` +
+    `${L.name} with posterior ${f(R.latest.p)}.`;
   const tr = R.names.map((n, j) => {
     const ix = R.label.flatMap((l, i) => l === j ? [i] : []);
     return {x: ix.map(i => R.dates[i]), y: ix.map(() => n), name: n, type: 'scatter', mode: 'markers',
@@ -405,9 +683,12 @@ function regimes() {
 function render() {
   const S = D.surface[`${st.kind}|${st.code}|${st.period}`];
   $('surfgrid').hidden = !S;
-  $('sub').textContent = S ? `${S.days} climate days, ${S.first} to ${S.last}; ${S.snaps.toLocaleString()} snapshots. ` +
-    `Cells with fewer than ${D.min_n} are blank.` : 'No settled events for this station and period.';
-  if (S) { surf(S); cal(S); term(S); smile(S); }
+  $('empty').hidden = !!S;
+  $('sub').innerHTML = `<b>${KIND[st.kind]} · ${st.code === 'all' ? 'all stations' : st.code} · ` +
+    `${st.period === 'all' ? 'all periods' : st.period}</b>` + (S ? `${S.days.toLocaleString()} climate days and ` +
+    `${S.snaps.toLocaleString()} snapshots, ${S.first} to ${S.last}.` : 'No settled events.');
+  kpis(S);
+  if (S) { surf(S); smile(S); term(S); cal(S); }
   regimes();
 }
 function fill(sel, opts, val) {
@@ -415,20 +696,43 @@ function fill(sel, opts, val) {
   sel.value = opts.some(o => o[0] === val) ? val : opts[0][0];
   return sel.value;
 }
-const codes = () => [['all', 'All stations'], ...D.codes[st.kind].map(c => [c, c])];
-$('meta').textContent = `Settled markets to ${D.through}; built ${D.built} by python viz.py.`;
+const codes = () => [['all', 'All'], ...D.codes[st.kind].map(c => [c, c])];
+$('meta').textContent = ` · markets settled to ${D.through.replaceAll(' ', ' ')}`;
+$('minn').textContent = D.min_n;
+$('built').textContent = `Built ${D.built} by python viz.py.`;
+st.kind = document.querySelector('input[name="kind"]:checked').value;  // a reload can restore the other radio
 st.code = fill($('code'), codes(), 'all');
-st.period = fill($('period'), D.periods.map(p => [p, p === 'all' ? 'All periods' : p]), 'all');
-$('kind').onchange = e => { st.kind = e.target.value; st.code = fill($('code'), codes(), st.code); render(); };
+st.period = fill($('period'), D.periods.map(p => [p, p === 'all' ? 'All' : p]), 'all');
+document.querySelectorAll('input[name="kind"]').forEach(r => r.onchange = () => {
+  st.kind = r.value;
+  st.code = fill($('code'), codes(), st.code);
+  render();
+});
 $('code').onchange = e => { st.code = e.target.value; render(); };
 $('period').onchange = e => { st.period = e.target.value; render(); };
 document.querySelectorAll('button[data-t]').forEach(b => b.onclick = () => {
   const on = b.closest('figure').classList.toggle('table');
   b.textContent = on ? 'Chart' : 'Table';
+  b.setAttribute('aria-pressed', on);
   if (!on) Plotly.Plots.resize($(b.dataset.t));
 });
-matchMedia('(prefers-color-scheme: dark)').addEventListener('change', render);
-render();
+$('reset').onclick = () => Plotly.relayout('surf', {'scene.camera': cam()});
+$('rotate').onclick = e => {
+  const on = $('surf-fig').classList.toggle('live');
+  e.currentTarget.textContent = on ? 'Done' : 'Rotate';
+  e.currentTarget.setAttribute('aria-pressed', on);
+};
+const themeLabel = () => $('theme').setAttribute('aria-label', `Switch to ${dark() ? 'light' : 'dark'} theme`);
+$('theme').onclick = () => {
+  root.dataset.theme = dark() ? 'light' : 'dark';
+  try { localStorage.setItem('kw-theme', root.dataset.theme); } catch (e) {}
+  themeLabel();
+  render();
+};
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { themeLabel(); render(); });
+themeLabel();
+// plotly measures its text once, so draw after the web font is in (offline, the load resolves empty and the fallback is used)
+(document.fonts ? document.fonts.load('12px "IBM Plex Sans"', 'aσ') : Promise.resolve()).catch(() => {}).then(render);
 </script>
 </body>
 </html>
