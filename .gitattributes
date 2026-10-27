@@ -1,0 +1,4 @@
+* text=auto
+
+# viz.py writes this page with plotly inlined: keep its 5.5 MB out of the language stats and diffs.
+results/viz.html linguist-generated

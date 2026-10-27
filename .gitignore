@@ -1,0 +1,3 @@
+# fetch.py downloads it from the public APIs (~1.3 GB); the model scripts write data/model/.
+data/
+__pycache__/
