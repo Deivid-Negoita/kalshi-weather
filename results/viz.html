@@ -266,7 +266,7 @@ code { padding: 1px 6px; border-radius: 6px; background: var(--sunk); color: var
     <figure class="card c-smile">
       <figcaption>
         <div class="ttl"><h3>The smile at three horizons</h3>
-          <p class="cap">Slices of the surface in 2-hour bins: the evening decision falls 30–31 h out, the morning one 16–17 h.</p></div>
+          <p class="cap">Slices of the surface in 2-hour bins: the evening decision falls 30–31&nbsp;h out, the morning one 16–17&nbsp;h.</p></div>
         <div class="tools"><button type="button" data-t="smile" aria-pressed="false">Table</button></div>
       </figcaption>
       <div class="plot" id="smile"></div><div class="view" id="smile-t"></div>
@@ -4279,9 +4279,9 @@ function kpis(S) {
   const r = S && S.real[H30] != null && S.imp[H30] != null ? S.real[H30] / S.imp[H30] : null;
   const fr = b => `F ${D.Fedges[b[0]]}–${D.Fedges[b[b.length - 1] + 1]}`;
   const tl = v => v == null ? ['–', 'Too few snapshots.'] :
-    [`${Math.abs(100 * v).toFixed(1)}<small>pts</small>`, `${v >= 0 ? 'Less' : 'More'} often than priced, 16–40 h out.`];
+    [`${Math.abs(100 * v).toFixed(1)}<small>pts</small>`, `${v >= 0 ? 'Less' : 'More'} often than priced, 16–40&nbsp;h out.`];
   const tiles = [
-    ['Realized ÷ implied sd, 30 h out', f(r), r == null ? 'Too few snapshots 30 h out.' : Math.abs(1 - r) < .005 ?
+    ['Realized ÷ implied sd, 30&nbsp;h out', f(r), r == null ? 'Too few snapshots 30&nbsp;h out.' : Math.abs(1 - r) < .005 ?
       'The market prices the day about right.' : `The market prices the day ${Math.round(100 * Math.abs(1 - r))}% too ${r < 1 ? 'wide' : 'narrow'}.`],
     [`Bottom tail, ${fr(LO)}`, ...tl(S && tail(S, LO, -1))],
     [`Top tail, ${fr(HI)}`, ...tl(S && tail(S, HI, 1))],
